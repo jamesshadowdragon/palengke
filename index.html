@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palengke — Beta</title>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    background: #000;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.container {
+    width: min(900px, 100%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.status {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid #2a2a2a;
+    border-radius: 999px;
+    color: #b0b0b0;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    background: #0a0a0a;
+}
+
+.logo {
+    font-size: clamp(3.5rem, 15vw, 8rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
+}
+
+.subtitle {
+    color: #9a9a9a;
+    font-size: 17px;
+    max-width: 550px;
+    line-height: 1.6;
+}
+
+.release {
+    color: #6b6b6b;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+
+.timer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 700px;
+    width: 100%;
+}
+
+.box {
+    padding: 24px 8px;
+    background: #0a0a0a;
+    border: 1px solid #232323;
+}
+
+.number {
+    font-size: clamp(2rem, 8vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.label {
+    margin-top: 8px;
+    color: #5a5a5a;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.play-button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 14px 32px;
+    background: #fff;
+    color: #000;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid #fff;
+    transition: all 0.2s ease;
+}
+
+.play-button:hover {
+    background: #000;
+    color: #fff;
+}
+
+.footer {
+    margin-top: 30px;
+    color: #3a3a3a;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+    .timer {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        max-width: 360px;
+    }
+
+    .box {
+        padding: 20px 8px;
+    }
+
+    .logo {
+        letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+        font-size: 15px;
+        padding: 0 8px;
+    }
+
+    .play-button {
+        padding: 12px 24px;
+        font-size: 10px;
+    }
+}
+</style>
+</head>
+<body>
+
+<main class="container">
+    <div class="status">Currently in Beta</div>
+
+    <h1 class="logo">PALENGKE</h1>
+
+    <p class="subtitle">The beta is live. The full release is almost here.</p>
+
+    <div class="release">Full release in</div>
+
+    <div class="timer">
+        <div class="box">
+            <div class="number" id="days">00</div>
+            <div class="label">Days</div>
+        </div>
+        <div class="box">
+            <div class="number" id="hours">00</div>
+            <div class="label">Hours</div>
+        </div>
+        <div class="box">
+            <div class="number" id="minutes">00</div>
+            <div class="label">Minutes</div>
+        </div>
+        <div class="box">
+            <div class="number" id="seconds">00</div>
+            <div class="label">Seconds</div>
+        </div>
+    </div>
+
+    <a class="play-button" href="https://www.roblox.com/games/76976982952681/Tara-Palengke" target="_blank" rel="noopener">Play Beta</a>
+
+    <div class="footer">Palengke © 2026</div>
+</main>
+
+<script>
+fetch("/api/timer.js")
+    .then(response => response.json())
+    .then(data => {
+        const endTime = new Date(data.endTime).getTime();
+
+        setInterval(() => {
+            const remaining = Math.max(0, endTime - Date.now());
+
+            document.getElementById("days").textContent =
+                String(Math.floor(remaining / 86400000)).padStart(2, "0");
+
+            document.getElementById("hours").textContent =
+                String(Math.floor((remaining % 86400000) / 3600000)).padStart(2, "0");
+
+            document.getElementById("minutes").textContent =
+                String(Math.floor((remaining % 3600000) / 60000)).padStart(2, "0");
+
+            document.getElementById("seconds").textContent =
+                String(Math.floor((remaining % 60000) / 1000)).padStart(2, "0");
+        }, 1000);
+    });
+</script>
+
+</body>
+</html>
